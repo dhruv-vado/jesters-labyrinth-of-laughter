@@ -9,26 +9,39 @@ public class MazeGenerator : MonoBehaviour
     private MazeCell _mazeCellPrefab;
 
     [SerializeField]
+    private MazeCell _mazeExitPrefab;
+
+    [SerializeField]
     private int _mazeWidth;
 
     [SerializeField]
     private int _mazeDepth;
-
+    
+    private int[] _centreIndex;
     private MazeCell[,] _mazeGrid;
 
     void Start()
     {
         _mazeGrid = new MazeCell[_mazeWidth, _mazeDepth];
+        _centreIndex = new int[] { _mazeWidth / 2, _mazeDepth / 2 };
 
         for (int x = 0; x < _mazeWidth; x++)
         {
             for (int z = 0; z < _mazeDepth; z++)
-            {
-                _mazeGrid[x, z] = Instantiate(_mazeCellPrefab, new Vector3(x*2, 0, z*2), Quaternion.identity);
+            {   
+                if(x!=_centreIndex[0] || z != _centreIndex[1])
+                    _mazeGrid[x, z] = Instantiate(_mazeCellPrefab, new Vector3(x*2, 0, z*2), Quaternion.identity);
+                else
+                    _mazeGrid[x, z] = Instantiate(_mazeExitPrefab, new Vector3(x*2, 0, z*2), Quaternion.identity);
             }
         }
 
         GenerateMaze(null, _mazeGrid[0, 0]);
+
+        _mazeGrid[_centreIndex[0] - 1,_centreIndex[1]].ClearRightWall();
+        _mazeGrid[_centreIndex[0] + 1,_centreIndex[1]].ClearLeftWall();
+        _mazeGrid[_centreIndex[0],_centreIndex[1] - 1].ClearFrontWall();
+        _mazeGrid[_centreIndex[0],_centreIndex[1] + 1].ClearBackWall();
     }
 
     private void GenerateMaze(MazeCell previousCell, MazeCell currentCell)
