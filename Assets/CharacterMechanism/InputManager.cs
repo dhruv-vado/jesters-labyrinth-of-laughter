@@ -5,6 +5,7 @@ public class InputManager : MonoBehaviour
 {
     private InputSystem_Actions inputSystem_Actions;
 
+    #region Singleton
     private static InputManager instance;
 
     public static InputManager Instance
@@ -27,6 +28,7 @@ public class InputManager : MonoBehaviour
         }
         inputSystem_Actions = new InputSystem_Actions();
     }
+    #endregion
 
     public void OnEnable()
     {
@@ -66,6 +68,11 @@ public class InputManager : MonoBehaviour
     public bool IsCrouching()
     {
         return inputSystem_Actions.Player.Crouch.IsPressed();
+    }
+
+    public bool Flashlight()
+    {
+        return inputSystem_Actions.Player.Torch.IsPressed();
     }
 
 }

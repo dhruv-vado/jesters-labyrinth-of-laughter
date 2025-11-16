@@ -3,14 +3,10 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField]
-    private float playerSpeedWalk = 5.0f;
-    [SerializeField]
-    private float playerSpeedSprint = 8.0f;
-    [SerializeField]
-    private float playerSpeedCrouch = 3.0f;
-    [SerializeField]
-    private float gravityValue = -9.81f;
+    [SerializeField] private float playerSpeedWalk = 5.0f;
+    [SerializeField] private float playerSpeedSprint = 8.0f;
+    [SerializeField] private float playerSpeedCrouch = 3.0f;
+    [SerializeField] private float gravityValue = -9.81f;
 
     public GameObject camera;
 

@@ -5,17 +5,15 @@ using UnityEngine;
 
 public class MazeGenerator : MonoBehaviour
 {
-    [SerializeField]
-    private MazeCell _mazeCellPrefab;
+    [SerializeField] private Transform _mazeRoot;
 
-    [SerializeField]
-    private MazeCell _mazeExitPrefab;
+    [SerializeField] private MazeCell _mazeCellPrefab;
+    [SerializeField] private MazeCell _mazeExitPrefab;
+    [SerializeField] private int _mazeScale;
 
-    [SerializeField]
-    private int _mazeWidth;
+    [SerializeField] private int _mazeWidth;
+    [SerializeField] private int _mazeDepth;
 
-    [SerializeField]
-    private int _mazeDepth;
     
     private int[] _centreIndex;
     private MazeCell[,] _mazeGrid;
@@ -25,14 +23,20 @@ public class MazeGenerator : MonoBehaviour
         _mazeGrid = new MazeCell[_mazeWidth, _mazeDepth];
         _centreIndex = new int[] { _mazeWidth / 2, _mazeDepth / 2 };
 
+        int totalCells = _mazeWidth * _mazeDepth;
+        EnemyManager.Instance.WayPoints = new Transform[totalCells];
+
+        int i = 0;
         for (int x = 0; x < _mazeWidth; x++)
         {
             for (int z = 0; z < _mazeDepth; z++)
             {   
                 if(x!=_centreIndex[0] || z != _centreIndex[1])
-                    _mazeGrid[x, z] = Instantiate(_mazeCellPrefab, new Vector3(x*2, 0, z*2), Quaternion.identity);
+                    _mazeGrid[x, z] = Instantiate(_mazeCellPrefab, new Vector3(x*_mazeScale, 0, z*_mazeScale), Quaternion.identity, _mazeRoot);
                 else
-                    _mazeGrid[x, z] = Instantiate(_mazeExitPrefab, new Vector3(x*2, 0, z*2), Quaternion.identity);
+                    _mazeGrid[x, z] = Instantiate(_mazeExitPrefab, new Vector3(x*_mazeScale, 0, z*_mazeScale), Quaternion.identity, _mazeRoot);
+
+                EnemyManager.Instance.WayPoints[i++] = _mazeGrid[x,z]._wayPoint;
             }
         }
 
@@ -42,6 +46,8 @@ public class MazeGenerator : MonoBehaviour
         _mazeGrid[_centreIndex[0] + 1,_centreIndex[1]].ClearLeftWall();
         _mazeGrid[_centreIndex[0],_centreIndex[1] - 1].ClearFrontWall();
         _mazeGrid[_centreIndex[0],_centreIndex[1] + 1].ClearBackWall();
+
+        Debug.Log("Maze Generated.");
     }
 
     private void GenerateMaze(MazeCell previousCell, MazeCell currentCell)
@@ -71,8 +77,8 @@ public class MazeGenerator : MonoBehaviour
 
     private IEnumerable<MazeCell> GetUnvisitedCells(MazeCell currentCell)
     {
-        int x = Mathf.RoundToInt(currentCell.transform.position.x / 2f);
-        int z = Mathf.RoundToInt(currentCell.transform.position.z / 2f);
+        int x = Mathf.RoundToInt(currentCell.transform.position.x / _mazeScale);
+        int z = Mathf.RoundToInt(currentCell.transform.position.z / _mazeScale);
 
         if (x + 1 < _mazeWidth)
         {
