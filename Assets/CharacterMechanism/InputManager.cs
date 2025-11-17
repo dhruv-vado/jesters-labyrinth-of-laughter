@@ -80,4 +80,8 @@ public class InputManager : MonoBehaviour
         return inputSystem_Actions.Player.Sonar.triggered;
     }
 
+    public bool Exit()
+    {
+        return inputSystem_Actions.Player.Exit.triggered;
+    }
 }

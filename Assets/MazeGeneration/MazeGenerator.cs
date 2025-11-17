@@ -41,6 +41,7 @@ public class MazeGenerator : MonoBehaviour
         }
 
         GenerateMaze(null, _mazeGrid[0, 0]);
+        CreateExit();
 
         _mazeGrid[_centreIndex[0] - 1,_centreIndex[1]].ClearRightWall();
         _mazeGrid[_centreIndex[0] + 1,_centreIndex[1]].ClearLeftWall();
@@ -154,6 +155,36 @@ public class MazeGenerator : MonoBehaviour
             previousCell.ClearBackWall();
             currentCell.ClearFrontWall();
             return;
+        }
+    }
+
+    private void CreateExit()
+    {
+        MazeExit _mazeExit = _mazeGrid[_centreIndex[0],_centreIndex[1]].GetComponent<MazeExit>();
+        MazeCell _mazeExitCell = _mazeGrid[_centreIndex[0],_centreIndex[1]];
+        if(!_mazeExitCell.IsLeftCleared)
+        {
+            _mazeExit._leftWallDoor.SetActive(true);
+            return;
+        }
+        else if(!_mazeExitCell.IsRightCleared)
+        {
+            _mazeExit._rightWallDoor.SetActive(true);
+            return;
+        }
+        else if(!_mazeExitCell.IsFrontCleared)
+        {
+            _mazeExit._frontWallDoor.SetActive(true);
+            return;
+        }
+        else if(!_mazeExitCell.IsBackCleared)
+        {
+            _mazeExit._backWallDoor.SetActive(true);
+            return;
+        }
+        else
+        {
+            Debug.Log("Error Creating Maze Exit.");
         }
     }
 

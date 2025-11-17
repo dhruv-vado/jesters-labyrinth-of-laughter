@@ -325,7 +325,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
   Agent: {fileID: 3800576631712168393}
   PatrolSpeed: 2.5
-  ChaseSpeed: 6.5
+  ChaseSpeed: 3
   ChaseAcceleration: 1
   WayPoints: []
   CurrentWayPoint: {fileID: 0}

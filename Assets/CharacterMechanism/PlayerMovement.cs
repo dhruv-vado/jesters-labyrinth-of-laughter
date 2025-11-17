@@ -7,6 +7,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float playerSpeedSprint = 8.0f;
     [SerializeField] private float playerSpeedCrouch = 3.0f;
     [SerializeField] private float gravityValue = -9.81f;
+    [SerializeField] private float _doorDetectionRange = 1f;
+    [SerializeField] private LayerMask _doorDetectionMask;
 
     public GameObject camera;
 
@@ -15,11 +17,13 @@ public class PlayerMovement : MonoBehaviour
     private bool groundedPlayer;
     private bool crouch = false;
     private InputManager inputManager;
+    private GameManager gameManager;
 
     private void Start()
     {
         controller = GetComponent<CharacterController>();
         inputManager = InputManager.Instance;
+        gameManager = GameManager.Instance;
     }
 
     void Update()
@@ -61,5 +65,26 @@ public class PlayerMovement : MonoBehaviour
         }
         Vector3 finalMove = (move * currentSpeed * Time.deltaTime) + (playerVelocity.y * Vector3.up * Time.deltaTime);
         controller.Move(finalMove);
+
+        if(inputManager.Exit())
+        {
+            if(RayCheck())
+            {
+                gameManager.PlayerEscaped();
+            }
+        }
+    }
+
+    private bool RayCheck()
+    {
+        Ray ray = new Ray(transform.position, transform.forward);
+        RaycastHit hitInfo;
+
+        if(Physics.Raycast(ray, out hitInfo, _doorDetectionRange, _doorDetectionMask, QueryTriggerInteraction.Ignore) && hitInfo.collider.CompareTag("Exit"))
+        {
+            return true;
+        }
+
+        return false;
     }
 }

@@ -166,6 +166,10 @@ MonoBehaviour:
   playerSpeedSprint: 8
   playerSpeedCrouch: 3
   gravityValue: -9.81
+  _doorDetectionRange: 2
+  _doorDetectionMask:
+    serializedVersion: 2
+    m_Bits: 256
   camera: {fileID: 6448411809816436568}
 --- !u!143 &3788986674772226540
 CharacterController:

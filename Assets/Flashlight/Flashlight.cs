@@ -69,7 +69,6 @@ public class Flashlight : MonoBehaviour
         if(Physics.Raycast(ray, out hitInfo, _enemyDetectionRange, _enemyDetectionMask, QueryTriggerInteraction.Ignore) && hitInfo.collider.CompareTag("Enemy"))
         {
             _enemy = hitInfo.collider.GetComponent<Enemy>();
-            Debug.Log("Enemy Detected" + _enemy.name);
             return true;
         }
 

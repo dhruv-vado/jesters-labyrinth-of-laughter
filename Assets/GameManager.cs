@@ -45,6 +45,8 @@ public class GameManager : MonoBehaviour
     public UnityEvent OnPlayerCaught;
     public UnityEvent OnWon;
 
+    private EnemyManager _enemyManager;
+
     private List<Enemy> _spawnedEnemies = new List<Enemy>();
     private Transform _playerTransform;
     private bool _playerFound = false;
@@ -55,6 +57,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         StartCoroutine(InitializeGame());
+        _enemyManager = EnemyManager.Instance;
     }
 
     private IEnumerator InitializeGame()
@@ -160,7 +163,10 @@ public class GameManager : MonoBehaviour
     {
         if(_currentState != GameState.Playing) return;
 
+        _enemyManager.DestroyAllEnemies();
+        _spawnedEnemies.Clear();
         _currentState = GameState.Won;
+        Cursor.lockState = CursorLockMode.None;
         OnWon?.Invoke();
         Time.timeScale = 0.01f;
     }
@@ -190,11 +196,7 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1f;
         _currentState = GameState.Initializing;
         
-        foreach(Enemy enemy in _spawnedEnemies)
-        {
-            if(enemy != null)
-                Destroy(enemy.gameObject);
-        }
+        _enemyManager.DestroyAllEnemies();
         _spawnedEnemies.Clear();
         Destroy(GameObject.FindGameObjectWithTag("Player"));
 
