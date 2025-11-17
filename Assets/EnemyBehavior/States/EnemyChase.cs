@@ -13,17 +13,17 @@ public class EnemyChase : EnemyStatesBase
         Enemy.Agent.ResetPath();
         Enemy.Agent.speed = Enemy.ChaseSpeed;
         SetDestination(Enemy.Player.transform);
-        Debug.Log("Chase State Started");
     }
 
     public override void ExitState()
     {
-        Debug.Log("Chase State Exited");
+        
     }
 
     public override void UpdateState()
     {
         CheckAndSetDestination();
+        Enemy.Agent.speed += Enemy.ChaseAcceleration * Time.deltaTime;
         SetDestination(Enemy.Player.transform);
     }
 
@@ -39,8 +39,7 @@ public class EnemyChase : EnemyStatesBase
             Enemy.CurrentWayPoint = null;
             Enemy.Agent.ResetPath();
             //player dies
-            Time.timeScale = 0f;
-            Debug.Log("Player Died.");
+            Enemy.PlayerDied();
         }
     }
     

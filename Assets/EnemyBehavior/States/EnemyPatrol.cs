@@ -14,12 +14,11 @@ public class EnemyPatrol : EnemyStatesBase
         Enemy.Agent.speed = Enemy.PatrolSpeed;
         SetRandomPoint();
         SetDestination(Enemy.CurrentWayPoint);
-        Debug.Log("Patrol State Started");
     }
 
     public override void ExitState()
     {
-        Debug.Log("Patrol State Exited");
+        
     }
 
     public override void UpdateState()

@@ -15,4 +15,7 @@ public class EnemyStatesFactory : MonoBehaviour
 
     public EnemyChase Chase(){return new EnemyChase(Enemy,this);}
 
+    public EnemyDied Died(){return new EnemyDied(Enemy,this);}
+
+    public EnemyKill Kill(){return new EnemyKill(Enemy,this);}
 }

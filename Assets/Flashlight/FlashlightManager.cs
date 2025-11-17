@@ -23,10 +23,12 @@ public class FlashlightManager : MonoBehaviour
 
     public float BatteryPercentage;
     public TextMeshProUGUI  _batteryText;
+    public Slider _enemyDeathSlider;
 
     private void Start()
     {
         BatteryPercentage = 100f;
+        _enemyDeathSlider.value = 0f;
     }
 
     private void Update()

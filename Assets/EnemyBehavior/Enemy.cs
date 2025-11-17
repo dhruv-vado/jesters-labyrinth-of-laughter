@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(UnityEngine.AI.NavMeshAgent))]
 public class Enemy : MonoBehaviour
@@ -10,6 +11,7 @@ public class Enemy : MonoBehaviour
     [HideInInspector]public UnityEngine.AI.NavMeshAgent Agent;
     public float PatrolSpeed = 5f;
     public float ChaseSpeed = 8f;
+    public float ChaseAcceleration = 1f;
 
     [Header("Patroling")]
     [HideInInspector]public Transform[] WayPoints;
@@ -17,6 +19,7 @@ public class Enemy : MonoBehaviour
     public float extraPatrolStopDistance = 1.5f;
     public float extraChaseStopDistance = 0.5f;
     public bool _playerFound;
+    public Renderer _renderer;
 
     [Header("States")]
     private EnemyStatesFactory _enemyStatesFactory;
@@ -77,5 +80,17 @@ public class Enemy : MonoBehaviour
         {
             _enemyStatesBase.SwitchStates(_enemyStatesFactory.Patrol());
         }
+    }
+
+    public void PlayerDied()
+    {
+        GameManager.Instance.PlayerCaught();
+        _enemyStatesBase.SwitchStates(_enemyStatesFactory.Kill());
+    }
+
+    public void EnemyDied()
+    {
+        
+        _enemyStatesBase.SwitchStates(_enemyStatesFactory.Died());
     }
 }

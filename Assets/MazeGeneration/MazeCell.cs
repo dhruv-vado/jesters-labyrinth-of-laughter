@@ -22,6 +22,10 @@ public class MazeCell : MonoBehaviour
     public Transform _wayPoint;
 
     public bool IsVisited { get; private set; }
+    public bool IsLeftCleared { get; set; }
+    public bool IsRightCleared { get; set; }
+    public bool IsFrontCleared { get; set; }
+    public bool IsBackCleared { get; set; }
 
     public void Visit()
     {
@@ -31,21 +35,25 @@ public class MazeCell : MonoBehaviour
 
     public void ClearLeftWall()
     {
+        IsLeftCleared = true;
         _leftWall.SetActive(false);
     }
 
     public void ClearRightWall()
     {
+        IsRightCleared = true;
         _rightWall.SetActive(false);
     }
 
     public void ClearFrontWall()
     {
+        IsFrontCleared = true;
         _frontWall.SetActive(false);
     }
 
     public void ClearBackWall()
     {
+        IsBackCleared = true;
         _backWall.SetActive(false);
     }
 }

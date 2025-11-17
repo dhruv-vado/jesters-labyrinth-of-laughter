@@ -36,4 +36,12 @@ public class EnemyManager : MonoBehaviour
     {
         return new List<Enemy>(_enemies);
     }
+
+    public void DestroyAllEnemies()
+    {
+        foreach(Enemy enemy in _enemies)
+        {
+            Destroy(enemy.gameObject);
+        }
+    }
 }

@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 5546514774856829529}
   - component: {fileID: 6444882938909519810}
   - component: {fileID: 8484679851495780723}
-  - component: {fileID: 6514972502972785417}
   m_Layer: 7
   m_Name: Capsule
   m_TagString: Untagged
@@ -91,29 +90,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &6514972502972785417
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 272827926509167308}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3285650061038625158
 GameObject:
   m_ObjectHideFlags: 0
@@ -199,7 +175,6 @@ GameObject:
   - component: {fileID: 6270951991979404638}
   - component: {fileID: 3494096240104934326}
   - component: {fileID: 8264587315718699637}
-  - component: {fileID: 2021370509637539784}
   m_Layer: 7
   m_Name: Cube
   m_TagString: Untagged
@@ -278,27 +253,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &2021370509637539784
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5263746068945583890}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7674086477364763080
 GameObject:
   m_ObjectHideFlags: 0
@@ -310,9 +264,10 @@ GameObject:
   - component: {fileID: 6939871014267567232}
   - component: {fileID: 3800576631712168393}
   - component: {fileID: 8101979572650846028}
+  - component: {fileID: 3100616294343022031}
   m_Layer: 7
   m_Name: Enemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -343,9 +298,9 @@ NavMeshAgent:
   m_GameObject: {fileID: 7674086477364763080}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 1
   m_Speed: 3.5
-  m_Acceleration: 6.79
+  m_Acceleration: 10
   avoidancePriority: 50
   m_AngularSpeed: 120
   m_StoppingDistance: 0.5
@@ -370,9 +325,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
   Agent: {fileID: 3800576631712168393}
   PatrolSpeed: 2.5
-  ChaseSpeed: 8
+  ChaseSpeed: 6.5
+  ChaseAcceleration: 1
   WayPoints: []
   CurrentWayPoint: {fileID: 0}
   extraPatrolStopDistance: 0.5
   extraChaseStopDistance: 0.5
   _playerFound: 0
+  _renderer: {fileID: 8484679851495780723}
+--- !u!136 &3100616294343022031
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7674086477364763080}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 1, z: 0}

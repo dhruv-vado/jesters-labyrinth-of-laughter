@@ -38,7 +38,6 @@ public class GameManager : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private Enemy _enemyPrefab;
-    [SerializeField] private Transform _enemyParent;
     [SerializeField] private BuildNavMesh _navMesh;
 
     [Header("Game Events")]
@@ -114,7 +113,7 @@ public class GameManager : MonoBehaviour
             Vector3 spawnPosition = spawnPoint.position;
             spawnPosition.y = 1f;
 
-            Enemy newEnemy = Instantiate(_enemyPrefab, spawnPosition, Quaternion.identity, _enemyParent);
+            Enemy newEnemy = Instantiate(_enemyPrefab, spawnPosition, Quaternion.identity);
             newEnemy.InitializeStates();
             _spawnedEnemies.Add(newEnemy);
         }
@@ -153,8 +152,8 @@ public class GameManager : MonoBehaviour
         if(_currentState != GameState.Playing) return;
 
         _currentState = GameState.GameOver;
+        Cursor.lockState = CursorLockMode.None;
         OnPlayerCaught?.Invoke();
-        Time.timeScale = 0.01f;
     }
 
     public void PlayerEscaped()
@@ -171,6 +170,7 @@ public class GameManager : MonoBehaviour
         if(_currentState == GameState.Playing)
         {
             _currentState = GameState.Paused;
+            Cursor.lockState = CursorLockMode.None;
             Time.timeScale = 0f;
         }
     }
@@ -180,6 +180,7 @@ public class GameManager : MonoBehaviour
         if(_currentState == GameState.Paused)
         {
             _currentState = GameState.Playing;
+            Cursor.lockState = CursorLockMode.Locked;   
             Time.timeScale = 1f;
         }
     }
@@ -195,7 +196,9 @@ public class GameManager : MonoBehaviour
                 Destroy(enemy.gameObject);
         }
         _spawnedEnemies.Clear();
-        
+        Destroy(GameObject.FindGameObjectWithTag("Player"));
+
+        Cursor.lockState = CursorLockMode.Locked;
         StartCoroutine(InitializeGame());
     }
 

@@ -1,15 +1,23 @@
 using UnityEngine;
 
-public class EnemyDied : MonoBehaviour
+public class EnemyDied : EnemyStatesBase
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public EnemyDied(Enemy enemy, EnemyStatesFactory enemyStatesFactory) : base(enemy, enemyStatesFactory)
+    {
+    }
+
+    public override void EnterState()
+    {
+        
+        Object.Destroy(Enemy.gameObject);
+    }
+
+    public override void ExitState()
     {
         
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void UpdateState()
     {
         
     }

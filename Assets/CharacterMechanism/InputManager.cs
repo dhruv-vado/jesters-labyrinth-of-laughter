@@ -75,4 +75,9 @@ public class InputManager : MonoBehaviour
         return inputSystem_Actions.Player.Torch.IsPressed();
     }
 
+    public bool Sonar()
+    {
+        return inputSystem_Actions.Player.Sonar.triggered;
+    }
+
 }
