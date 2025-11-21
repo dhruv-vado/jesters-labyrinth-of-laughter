@@ -39,6 +39,11 @@ public class GameManager : MonoBehaviour
     [Header("References")]
     [SerializeField] private Enemy _enemyPrefab;
     [SerializeField] private BuildNavMesh _navMesh;
+    [SerializeField] private MazeGenerator _mazeGenerator;
+    [SerializeField] private AudioSource _bgSound;
+    [SerializeField] private AudioClip _bgAmbience;
+    [SerializeField] private AudioClip _bgChase;
+
 
     [Header("Game Events")]
     public UnityEvent OnGameStart;
@@ -50,6 +55,8 @@ public class GameManager : MonoBehaviour
     private List<Enemy> _spawnedEnemies = new List<Enemy>();
     private Transform _playerTransform;
     private bool _playerFound = false;
+
+    public bool IsPlayable = true;
 
     public GameState CurrentState => _currentState;
     public int ActiveEnemies => _spawnedEnemies.Count;
@@ -80,10 +87,14 @@ public class GameManager : MonoBehaviour
         _navMesh.Build();
         
         PlayerManager.Instance.Spawn();
+        Cursor.lockState = CursorLockMode.Locked;
         SpawnEnemies();
         
         _currentState = GameState.Playing;
         OnGameStart?.Invoke();
+
+        _bgSound.clip = _bgAmbience;
+        _bgSound.Play();
     }
 
     public void SpawnEnemies()
@@ -150,19 +161,34 @@ public class GameManager : MonoBehaviour
         return validPoints;
     }
 
+    public void ChasingPlayer()
+    {
+        _bgSound.clip = _bgChase;
+        _bgSound.Play();
+    }
+
+    public void PlayingAmbience()
+    {
+        _bgSound.clip = _bgAmbience;
+        _bgSound.Play();
+    }
+
     public void PlayerCaught()
     {
         if(_currentState != GameState.Playing) return;
 
+        IsPlayable = false;
         _currentState = GameState.GameOver;
         Cursor.lockState = CursorLockMode.None;
         OnPlayerCaught?.Invoke();
+        PlayerManager.Instance.PlayerCaught();
     }
 
     public void PlayerEscaped()
     {
         if(_currentState != GameState.Playing) return;
 
+        IsPlayable = false;
         _enemyManager.DestroyAllEnemies();
         _spawnedEnemies.Clear();
         _currentState = GameState.Won;
@@ -175,6 +201,7 @@ public class GameManager : MonoBehaviour
     {
         if(_currentState == GameState.Playing)
         {
+            IsPlayable = false;
             _currentState = GameState.Paused;
             Cursor.lockState = CursorLockMode.None;
             Time.timeScale = 0f;
@@ -185,20 +212,26 @@ public class GameManager : MonoBehaviour
     {
         if(_currentState == GameState.Paused)
         {
+            IsPlayable = true;
             _currentState = GameState.Playing;
-            Cursor.lockState = CursorLockMode.Locked;   
+            Cursor.lockState = CursorLockMode.Locked;  
             Time.timeScale = 1f;
         }
     }
 
     public void RestartGame()
     {
+        IsPlayable = true;
         Time.timeScale = 1f;
         _currentState = GameState.Initializing;
         
         _enemyManager.DestroyAllEnemies();
         _spawnedEnemies.Clear();
         Destroy(GameObject.FindGameObjectWithTag("Player"));
+        if(_mazeGenerator != null)
+        {
+            _mazeGenerator.GenerateNewMaze();
+        }
 
         Cursor.lockState = CursorLockMode.Locked;
         StartCoroutine(InitializeGame());
@@ -206,6 +239,7 @@ public class GameManager : MonoBehaviour
 
     private void OnDestroy()
     {
+        IsPlayable = true;
         Time.timeScale = 1f;
     }
 }

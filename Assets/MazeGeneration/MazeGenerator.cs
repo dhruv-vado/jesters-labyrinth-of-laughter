@@ -18,8 +18,15 @@ public class MazeGenerator : MonoBehaviour
     private int[] _centreIndex;
     private MazeCell[,] _mazeGrid;
 
-    void Start()
+    private void Start()
     {
+        GenerateNewMaze();
+    }
+
+    public void GenerateNewMaze()
+    {
+        ClearExistingMaze();
+
         _mazeGrid = new MazeCell[_mazeWidth, _mazeDepth];
         _centreIndex = new int[] { _mazeWidth / 2, _mazeDepth / 2 };
 
@@ -49,6 +56,19 @@ public class MazeGenerator : MonoBehaviour
         _mazeGrid[_centreIndex[0],_centreIndex[1] + 1].ClearBackWall();
 
         Debug.Log("Maze Generated.");
+    }
+
+    private void ClearExistingMaze()
+    {
+        if(_mazeRoot == null)
+        {
+            return;
+        }
+
+        for(int i = _mazeRoot.childCount - 1; i >= 0; i--)
+        {
+            Destroy(_mazeRoot.GetChild(i).gameObject);
+        }
     }
 
     private void GenerateMaze(MazeCell previousCell, MazeCell currentCell)

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class EnemyPatrol : EnemyStatesBase
 {
+    private Coroutine patrolCoroutine;
     public EnemyPatrol(Enemy enemy, EnemyStatesFactory enemyStatesFactory) : base(enemy, enemyStatesFactory)
     {
 
@@ -14,11 +15,16 @@ public class EnemyPatrol : EnemyStatesBase
         Enemy.Agent.speed = Enemy.PatrolSpeed;
         SetRandomPoint();
         SetDestination(Enemy.CurrentWayPoint);
+        patrolCoroutine = Enemy.StartCoroutine(PatrolRoutine());
     }
 
     public override void ExitState()
     {
-        
+        if (patrolCoroutine != null)
+        {
+            Enemy.StopCoroutine(patrolCoroutine);
+            patrolCoroutine = null;
+        }
     }
 
     public override void UpdateState()
@@ -40,6 +46,15 @@ public class EnemyPatrol : EnemyStatesBase
                 Enemy.Agent.ResetPath();
                 this.EnterState();
             }
+        }
+    }
+
+    private IEnumerator PatrolRoutine()
+    {
+        while(true)
+        {
+            yield return new WaitForSeconds(Random.Range(10f, 40f));
+            Enemy.PlayPatrolAudio();
         }
     }
 

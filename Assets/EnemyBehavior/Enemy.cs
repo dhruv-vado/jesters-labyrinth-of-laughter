@@ -12,14 +12,16 @@ public class Enemy : MonoBehaviour
     public float PatrolSpeed = 5f;
     public float ChaseSpeed = 8f;
     public float ChaseAcceleration = 1f;
+    public Animator _animator;
 
-    [Header("Patroling")]
+    [Header("References")]
     [HideInInspector]public Transform[] WayPoints;
     public Transform CurrentWayPoint;
     public float extraPatrolStopDistance = 1.5f;
     public float extraChaseStopDistance = 0.5f;
     public bool _playerFound;
     public Renderer _renderer;
+    public EnemySounds _enemySounds;
 
     [Header("States")]
     private EnemyStatesFactory _enemyStatesFactory;
@@ -68,17 +70,47 @@ public class Enemy : MonoBehaviour
         _enemyStatesBase.UpdateState();
     }
 
+    private bool _isChaseAudioPlaying = false;
+
+    public void PlayPatrolAudio()
+    {
+        _enemySounds.PlayPatrolAudio();
+    }
+
     public void PlayerFound(bool found)
     {
+        if(_playerFound == found)
+        {
+            return;
+        }
+
         _playerFound = found;
 
         if(found)
         {
             _enemyStatesBase.SwitchStates(_enemyStatesFactory.Chase());
+
+            if(!_isChaseAudioPlaying && _enemySounds != null)
+            {
+                _enemySounds.PlayChaseAudio();
+                _isChaseAudioPlaying = true;
+            }
+
+            GameManager.Instance.ChasingPlayer();
+            _animator.SetBool("isRunning", true);
         }
         else
         {
             _enemyStatesBase.SwitchStates(_enemyStatesFactory.Patrol());
+
+            if(_enemySounds != null)
+            {
+                _enemySounds.PlayPatrolAudio();
+            }
+
+            _isChaseAudioPlaying = false;
+            _animator.SetBool("isRunning", false);
+            GameManager.Instance.PlayingAmbience();
         }
     }
 
@@ -90,7 +122,7 @@ public class Enemy : MonoBehaviour
 
     public void EnemyDied()
     {
-        
+        _enemySounds.PlayDeadAudio();
         _enemyStatesBase.SwitchStates(_enemyStatesFactory.Died());
     }
 }

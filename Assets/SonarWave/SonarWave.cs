@@ -16,18 +16,28 @@ public class SonarWave : MonoBehaviour
 
     [Header("Enemy Glow")]
     [SerializeField] private LayerMask _enemyLayerMask = ~0;
-    [SerializeField] private Color _glowColor = Color.red;
     [SerializeField] private float _emissionStrength = 5f;
     [SerializeField] private SphereCollider _detectionCollider;
+    [SerializeField] private Material _enemyMaterial;
+
+    float intensityFactor;
+    float currentEmissionStrength;
+                    
+    Color finalEmission;
+    
 
     private InputManager _inputManager;
     private Rigidbody _rigidbody;
+    private bool _glowEnemy = false;
 
     private class EnemyGlowData
     {
         public Renderer Renderer;
         public Material OriginalMaterial;
         public Material GlowMaterial;
+        public Color OriginalEmissionColor;
+        public Texture OriginalEmissionMap;
+        public bool HadEmissionMap;
     }
 
     private Dictionary<Enemy, EnemyGlowData> _glowingEnemies = new Dictionary<Enemy, EnemyGlowData>();
@@ -70,9 +80,14 @@ public class SonarWave : MonoBehaviour
     {
         float timeSinceLastSonar = Time.time - _lastSonarTime;
         
-        if(_inputManager.Sonar() && timeSinceLastSonar >= _cooldown && !_isActive)
+        if(_inputManager.Sonar() && !_inputManager.Flashlight() && timeSinceLastSonar >= _cooldown && !_isActive)
         {
             StartSonarPulse();
+        }
+
+        if(_inputManager.Flashlight())
+        {
+            ResetSonar();
         }
         
         if(_isActive)
@@ -99,7 +114,19 @@ public class SonarWave : MonoBehaviour
                     _light.intensity = _maxIntensity;
                 }
 
-                UpdateEnemyEmission();
+                //UpdateEnemyEmission();
+
+                if(_glowEnemy)
+                {
+                    _enemyMaterial.EnableKeyword("_EMISSION");
+
+                    intensityFactor = Mathf.Approximately(_maxIntensity, 0f) ? 0f : Mathf.Clamp01(_light.intensity / _maxIntensity);
+                    currentEmissionStrength = _emissionStrength * intensityFactor;
+                                    
+                    finalEmission = Color.white * currentEmissionStrength;
+                    _enemyMaterial.SetColor("_EmissionColor", finalEmission);
+
+                }
                 
                 if(_currentRadius >= _maxRadius)
                 {
@@ -110,7 +137,8 @@ public class SonarWave : MonoBehaviour
         }
         else
         {
-            UpdateEnemyEmission();
+            //UpdateEnemyEmission();
+            _enemyMaterial.SetColor("_EmissionColor", Color.black);
         }
     }
     
@@ -145,7 +173,7 @@ public class SonarWave : MonoBehaviour
             _detectionCollider.radius = _initialRadius;
         }
 
-        RestoreAllEnemyMaterials();
+        //RestoreAllEnemyMaterials();
     }
     
     private void OnTriggerEnter(Collider other)
@@ -153,10 +181,14 @@ public class SonarWave : MonoBehaviour
         if(IsEnemyCollider(other))
         {
             Enemy enemy = other.GetComponent<Enemy>();
-            if(enemy != null)
+           if(enemy != null)
             {
-                MakeEnemyGlow(enemy);
+                _glowEnemy = true;
             }
+        }
+        else
+        {
+            _glowEnemy = false;
         }
     }
 
@@ -167,7 +199,7 @@ public class SonarWave : MonoBehaviour
         return layerMatch || tagMatch;
     }
     
-    private void MakeEnemyGlow(Enemy enemy)
+    /*private void MakeEnemyGlow(Enemy enemy)
     {
         Renderer renderer = enemy._renderer != null ? enemy._renderer : enemy.GetComponentInChildren<Renderer>();
         if(renderer == null)
@@ -180,17 +212,48 @@ public class SonarWave : MonoBehaviour
         {
             glowMaterial.EnableKeyword("_EMISSION");
             glowMaterial.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive;
+            
+            // Store original emission color
+            Color originalEmission = glowMaterial.GetColor("_EmissionColor");
+            
+            // Check if material has an emission map
+            Texture emissionMap = null;
+            bool hasEmissionMap = false;
+            if(glowMaterial.HasProperty("_EmissionMap") && glowMaterial.GetTexture("_EmissionMap") != null)
+            {
+                emissionMap = glowMaterial.GetTexture("_EmissionMap");
+                hasEmissionMap = true;
+            }
+            // If no emission map, try using the main texture as emission source
+            else if(glowMaterial.HasProperty("_MainTex") && glowMaterial.GetTexture("_MainTex") != null)
+            {
+                emissionMap = glowMaterial.GetTexture("_MainTex");
+                hasEmissionMap = true;
+                glowMaterial.SetTexture("_EmissionMap", emissionMap);
+            }
+            
+            _glowingEnemies[enemy] = new EnemyGlowData
+            {
+                Renderer = renderer,
+                OriginalMaterial = originalMaterial,
+                GlowMaterial = glowMaterial,
+                OriginalEmissionColor = originalEmission,
+                OriginalEmissionMap = emissionMap,
+                HadEmissionMap = hasEmissionMap
+            };
+        }
+        else
+        {
+            // Material doesn't support emission, just store basic data
+            _glowingEnemies[enemy] = new EnemyGlowData
+            {
+                Renderer = renderer,
+                OriginalMaterial = originalMaterial,
+                GlowMaterial = glowMaterial
+            };
         }
         
         renderer.material = glowMaterial;
-        
-        _glowingEnemies[enemy] = new EnemyGlowData
-        {
-            Renderer = renderer,
-            OriginalMaterial = originalMaterial,
-            GlowMaterial = glowMaterial
-        };
-        
         UpdateEnemyEmission();
     }
     
@@ -200,7 +263,7 @@ public class SonarWave : MonoBehaviour
             return;
         
         float intensityFactor = Mathf.Approximately(_maxIntensity, 0f) ? 0f : Mathf.Clamp01(_light.intensity / _maxIntensity);
-        Color emissionColor = _glowColor * (_emissionStrength * intensityFactor);
+        float currentEmissionStrength = _emissionStrength * intensityFactor;
         
         foreach(var data in _glowingEnemies.Values)
         {
@@ -209,7 +272,15 @@ public class SonarWave : MonoBehaviour
             
             if(data.GlowMaterial.HasProperty("_EmissionColor"))
             {
-                data.GlowMaterial.SetColor("_EmissionColor", emissionColor);
+                Color baseEmission = data.OriginalEmissionColor;
+                
+                if(baseEmission.r <= 0.01f && baseEmission.g <= 0.01f && baseEmission.b <= 0.01f)
+                {
+                    baseEmission = Color.white;
+                }
+                
+                Color finalEmission = baseEmission * currentEmissionStrength;
+                data.GlowMaterial.SetColor("_EmissionColor", finalEmission);
             }
         }
     }
@@ -239,6 +310,6 @@ public class SonarWave : MonoBehaviour
     private void OnDestroy()
     {
         RestoreAllEnemyMaterials();
-    }
+    }*/
 }
 

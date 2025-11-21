@@ -9,9 +9,11 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float gravityValue = -9.81f;
     [SerializeField] private float _doorDetectionRange = 1f;
     [SerializeField] private LayerMask _doorDetectionMask;
+    [SerializeField] private GameObject _footstepsAudioSource;
 
     public GameObject camera;
 
+    private bool _isPlayable = true;
     private CharacterController controller;
     private Vector3 playerVelocity;
     private bool groundedPlayer;
@@ -28,6 +30,9 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        _isPlayable = GameManager.Instance.IsPlayable;
+        if(!_isPlayable) return;
+
         groundedPlayer = controller.isGrounded;
         if (groundedPlayer && playerVelocity.y < 0)
         {
@@ -63,8 +68,18 @@ public class PlayerMovement : MonoBehaviour
 			crouch = false;
 			}
         }
+
         Vector3 finalMove = (move * currentSpeed * Time.deltaTime) + (playerVelocity.y * Vector3.up * Time.deltaTime);
         controller.Move(finalMove);
+
+        if(input != new Vector2(0f,0f))
+        {
+            _footstepsAudioSource.SetActive(true);
+        }
+        else
+        {
+            _footstepsAudioSource.SetActive(false);
+        }
 
         if(inputManager.Exit())
         {
@@ -86,5 +101,10 @@ public class PlayerMovement : MonoBehaviour
         }
 
         return false;
+    }
+
+    public void PlayerCaught()
+    {
+        _isPlayable = false;
     }
 }

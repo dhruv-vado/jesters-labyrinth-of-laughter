@@ -10,6 +10,11 @@ public class EnemyChase : EnemyStatesBase
 
     public override void EnterState()
     {
+        if(!CanChase())
+        {
+            return;
+        }
+
         Enemy.Agent.ResetPath();
         Enemy.Agent.speed = Enemy.ChaseSpeed;
         SetDestination(Enemy.Player.transform);
@@ -22,6 +27,11 @@ public class EnemyChase : EnemyStatesBase
 
     public override void UpdateState()
     {
+        if(!CanChase())
+        {
+            return;
+        }
+
         CheckAndSetDestination();
         Enemy.Agent.speed += Enemy.ChaseAcceleration * Time.deltaTime;
         SetDestination(Enemy.Player.transform);
@@ -43,7 +53,42 @@ public class EnemyChase : EnemyStatesBase
         }
     }
     
-    private void SetDestination(Transform point) => Enemy.Agent.SetDestination(point.position);
+    private bool CanChase()
+    {
+        if(Enemy.Agent == null || !Enemy.Agent.enabled || !Enemy.Agent.isOnNavMesh)
+        {
+            return false;
+        }
 
-    private void SetDestination(Vector3 point) => Enemy.Agent.SetDestination(point);
+        if(Enemy.Player == null)
+        {
+            return false;
+        }
+
+        if(GameManager.Instance != null && !GameManager.Instance.IsPlayable)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private void SetDestination(Transform point)
+    {
+        if(point == null)
+            return;
+
+        SetDestination(point.position);
+    }
+
+    private void SetDestination(Vector3 point)
+    {
+        if(!CanChase())
+        {
+            Enemy.Agent.ResetPath();
+            return;
+        }
+
+        Enemy.Agent.SetDestination(point);
+    }
 }

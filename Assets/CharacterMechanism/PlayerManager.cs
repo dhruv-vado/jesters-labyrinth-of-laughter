@@ -18,4 +18,8 @@ public class PlayerManager : MonoBehaviour
         Instantiate(Player,new Vector3(0f,1f,0f),Quaternion.identity);
     }
     
+    public void PlayerCaught()
+    {
+        //Destroy(Player);
+    }
 }
