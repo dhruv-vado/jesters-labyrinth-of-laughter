@@ -85,7 +85,10 @@ public class EnemyChase : EnemyStatesBase
     {
         if(!CanChase())
         {
-            Enemy.Agent.ResetPath();
+            if(Enemy.Agent != null && Enemy.Agent.enabled && Enemy.Agent.isOnNavMesh)
+            {
+                Enemy.Agent.ResetPath();
+            }
             return;
         }
 

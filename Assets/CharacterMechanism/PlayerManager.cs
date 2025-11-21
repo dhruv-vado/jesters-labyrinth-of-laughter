@@ -21,5 +21,6 @@ public class PlayerManager : MonoBehaviour
     public void PlayerCaught()
     {
         //Destroy(Player);
+        Player.GetComponent<PlayerMovement>()._footstepsAudioSource.SetActive(false);
     }
 }

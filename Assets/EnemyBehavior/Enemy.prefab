@@ -1290,7 +1290,7 @@ MonoBehaviour:
   _player: {fileID: 0}
   _detectionOrigin: {fileID: 9099252797129672994}
   _detectionAngle: 66
-  _radius: 7.21
+  _radius: 4.4
   _targetMask:
     serializedVersion: 2
     m_Bits: 512
@@ -2401,7 +2401,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
   Agent: {fileID: 3800576631712168393}
   PatrolSpeed: 2.5
-  ChaseSpeed: 3
+  ChaseSpeed: 5
   ChaseAcceleration: 1
   _animator: {fileID: 7902087096081849268}
   WayPoints: []

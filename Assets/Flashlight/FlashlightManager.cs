@@ -33,7 +33,7 @@ public class FlashlightManager : MonoBehaviour
 
     private void Update()
     {
-        _batteryText.text = BatteryPercentage.ToString() + " %"; 
+        _batteryText.text = "Battery: " + BatteryPercentage.ToString() + " %"; 
     }
 
 }

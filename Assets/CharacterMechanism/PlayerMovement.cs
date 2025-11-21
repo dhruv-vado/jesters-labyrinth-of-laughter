@@ -9,7 +9,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float gravityValue = -9.81f;
     [SerializeField] private float _doorDetectionRange = 1f;
     [SerializeField] private LayerMask _doorDetectionMask;
-    [SerializeField] private GameObject _footstepsAudioSource;
+    [SerializeField] public GameObject _footstepsAudioSource;
 
     public GameObject camera;
 
@@ -86,6 +86,7 @@ public class PlayerMovement : MonoBehaviour
             if(RayCheck())
             {
                 gameManager.PlayerEscaped();
+                _footstepsAudioSource.SetActive(false);
             }
         }
     }
@@ -106,5 +107,6 @@ public class PlayerMovement : MonoBehaviour
     public void PlayerCaught()
     {
         _isPlayable = false;
+        _footstepsAudioSource.SetActive(false);
     }
 }

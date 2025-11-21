@@ -706,7 +706,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
+  m_RenderPostProcessing: 1
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -870,9 +870,9 @@ MonoBehaviour:
   _flashlight: {fileID: 5317194758081008095}
   _isOn: 0
   _totalLife: 100
-  _decayFactor: 0.5
+  _decayFactor: 1
   _enemyDetectionMask:
     serializedVersion: 2
     m_Bits: 192
-  _enemyDetectionRange: 5
-  _enemyKillTime: 0.8
+  _enemyDetectionRange: 5.2
+  _enemyKillTime: 1.2

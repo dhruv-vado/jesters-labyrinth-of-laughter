@@ -58,6 +58,8 @@ public class Flashlight : MonoBehaviour
         else
         {
             _flashlight.enabled = false;
+            timer = 0f;
+            FlashlightManager.Instance._enemyDeathSlider.value = 0f;
         }
     }
 
