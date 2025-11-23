@@ -57,18 +57,14 @@ public class Enemy : MonoBehaviour
     
     private void OnDestroy()
     {
-        // Clean up state to stop coroutines and prevent leaks
         if(_enemyStatesBase != null)
         {
             _enemyStatesBase.ExitState();
             _enemyStatesBase = null;
         }
         
-        // Disable and clean up NavMesh agent to prevent memory leaks
         if(Agent != null)
         {
-            // ResetPath can only be called on an active agent that's on NavMesh
-            // So we check before calling it, and call it before disabling
             if(Agent.enabled && Agent.isOnNavMesh)
             {
                 Agent.ResetPath();
@@ -76,7 +72,6 @@ public class Enemy : MonoBehaviour
             Agent.enabled = false;
         }
         
-        // Unregister from EnemyManager
         if(EnemyManager.Instance != null)
         {
             EnemyManager.Instance.UnregisterEnemy(this);
@@ -85,7 +80,6 @@ public class Enemy : MonoBehaviour
 
     private void Update()
     {
-        //update the state - check for null to prevent errors during destruction
         if(_enemyStatesBase != null)
         {
             _enemyStatesBase.UpdateState();

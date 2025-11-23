@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// Factory class - should NOT inherit from MonoBehaviour
 public class EnemyStatesFactory
 {
     public Enemy Enemy;

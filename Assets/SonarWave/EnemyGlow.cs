@@ -15,7 +15,6 @@ public class EnemyGlow : MonoBehaviour
 
     private void Start()
     {
-        // Initialize collider settings
         if(_detectionCollider != null)
         {
             _detectionCollider.isTrigger = true;
@@ -23,7 +22,6 @@ public class EnemyGlow : MonoBehaviour
             _detectionCollider.radius = 0.5f;
         }
         
-        // Check for Rigidbody
         Rigidbody rb = GetComponent<Rigidbody>();
         if(rb == null)
         {
@@ -32,7 +30,6 @@ public class EnemyGlow : MonoBehaviour
             rb.useGravity = false;
         }
         
-        // Initialize material
         if(_enemyMaterial != null)
         {
             _enemyMaterial.SetColor("_EmissionColor", Color.black);
@@ -41,7 +38,6 @@ public class EnemyGlow : MonoBehaviour
 
     private void Update()
     {
-        // Null checks to prevent errors
         if(_sonarWave == null || _enemyMaterial == null)
             return;
             
@@ -49,14 +45,12 @@ public class EnemyGlow : MonoBehaviour
         {
             if(!_sonarWave._isFadingOut)
             {                
-                // Enable and update collider when sonar is active
                 if(_detectionCollider != null)
                 {
                         _detectionCollider.enabled = true;
                     _detectionCollider.radius = _sonarWave._currentRadius;
                 }
                 
-                // Smooth transition for emission
                 float targetLerp = _enemyDetected ? 1f : 0f;
                 _currentEmissionLerp = Mathf.MoveTowards(_currentEmissionLerp, targetLerp, _transitionSpeed * Time.deltaTime);
                 
@@ -81,7 +75,6 @@ public class EnemyGlow : MonoBehaviour
         }
         else
         {
-            // Disable collider and reset glow when sonar is inactive
             if(_detectionCollider != null)
             {
                 _detectionCollider.enabled = false;
@@ -97,7 +90,6 @@ public class EnemyGlow : MonoBehaviour
     
     private void OnTriggerEnter(Collider other)
     {
-        // Only detect the first enemy, ignore all others
         if(_trackedEnemy == null && other.CompareTag("Enemy"))
         {
             _trackedEnemy = other;
@@ -107,7 +99,6 @@ public class EnemyGlow : MonoBehaviour
     
     private void OnTriggerExit(Collider other)
     {
-        // Only respond to the tracked enemy leaving
         if(other == _trackedEnemy)
         {
             _enemyDetected = false;
