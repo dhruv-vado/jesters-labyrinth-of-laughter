@@ -34,6 +34,10 @@ public class EnemyPatrol : EnemyStatesBase
 
     private void CheckAndSetDestination()
     {
+        // Null checks to prevent errors during destruction
+        if(Enemy == null || Enemy.Agent == null || !Enemy.Agent.enabled)
+            return;
+            
         if(Enemy.Agent.hasPath && Enemy.CurrentWayPoint != null)
         {
             //calc distance b/w current target

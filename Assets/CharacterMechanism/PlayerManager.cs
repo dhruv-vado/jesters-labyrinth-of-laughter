@@ -12,15 +12,17 @@ public class PlayerManager : MonoBehaviour
     #endregion
 
     public GameObject Player;
+    [HideInInspector]public PlayerMovement PlayerMovement;
+
 
     public void Spawn()
     {
         Instantiate(Player,new Vector3(0f,1f,0f),Quaternion.identity);
+        PlayerMovement = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovement>();
     }
     
     public void PlayerCaught()
     {
-        //Destroy(Player);
-        Player.GetComponent<PlayerMovement>()._footstepsAudioSource.SetActive(false);
+        PlayerMovement.PlayerCaught();
     }
 }

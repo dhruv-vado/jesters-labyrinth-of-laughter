@@ -57,6 +57,25 @@ public class Enemy : MonoBehaviour
     
     private void OnDestroy()
     {
+        // Clean up state to stop coroutines and prevent leaks
+        if(_enemyStatesBase != null)
+        {
+            _enemyStatesBase.ExitState();
+            _enemyStatesBase = null;
+        }
+        
+        // Disable and clean up NavMesh agent to prevent memory leaks
+        if(Agent != null)
+        {
+            // ResetPath can only be called on an active agent that's on NavMesh
+            // So we check before calling it, and call it before disabling
+            if(Agent.enabled && Agent.isOnNavMesh)
+            {
+                Agent.ResetPath();
+            }
+            Agent.enabled = false;
+        }
+        
         // Unregister from EnemyManager
         if(EnemyManager.Instance != null)
         {
@@ -66,8 +85,11 @@ public class Enemy : MonoBehaviour
 
     private void Update()
     {
-        //update the state
-        _enemyStatesBase.UpdateState();
+        //update the state - check for null to prevent errors during destruction
+        if(_enemyStatesBase != null)
+        {
+            _enemyStatesBase.UpdateState();
+        }
     }
 
     private bool _isChaseAudioPlaying = false;
@@ -95,7 +117,7 @@ public class Enemy : MonoBehaviour
                 _enemySounds.PlayChaseAudio();
                 _isChaseAudioPlaying = true;
             }
-
+            EnemyManager.Instance.PlayerDetected(true);     
             GameManager.Instance.ChasingPlayer();
             _animator.SetBool("isRunning", true);
         }
@@ -109,6 +131,7 @@ public class Enemy : MonoBehaviour
             }
 
             _isChaseAudioPlaying = false;
+            EnemyManager.Instance.PlayerDetected(false);
             _animator.SetBool("isRunning", false);
             GameManager.Instance.PlayingAmbience();
         }
@@ -117,12 +140,16 @@ public class Enemy : MonoBehaviour
     public void PlayerDied()
     {
         GameManager.Instance.PlayerCaught();
+        EnemyManager.Instance.PlayerDetected(false);
         _enemyStatesBase.SwitchStates(_enemyStatesFactory.Kill());
     }
 
     public void EnemyDied()
     {
+        GameManager.Instance.UpdateEnemyCount();
         _enemySounds.PlayDeadAudio();
+        GameManager.Instance.PlayingAmbience();
+        EnemyManager.Instance.PlayerDetected(false);
         _enemyStatesBase.SwitchStates(_enemyStatesFactory.Died());
     }
 }

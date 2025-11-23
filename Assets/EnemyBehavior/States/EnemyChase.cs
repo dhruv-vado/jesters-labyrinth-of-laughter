@@ -33,8 +33,13 @@ public class EnemyChase : EnemyStatesBase
         }
 
         CheckAndSetDestination();
-        Enemy.Agent.speed += Enemy.ChaseAcceleration * Time.deltaTime;
-        SetDestination(Enemy.Player.transform);
+        
+        // Only update speed and destination if agent is valid
+        if(Enemy.Agent != null && Enemy.Agent.enabled)
+        {
+            Enemy.Agent.speed += Enemy.ChaseAcceleration * Time.deltaTime;
+            SetDestination(Enemy.Player.transform);
+        }
     }
 
     private void CheckAndSetDestination()

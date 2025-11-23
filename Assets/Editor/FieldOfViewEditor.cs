@@ -9,6 +9,7 @@ public class FieldOfViewEditor : Editor
         EnemyDetection fov = (EnemyDetection)target;
         Handles.color = Color.white;
         Handles.DrawWireArc(fov.transform.position, Vector3.up, Vector3.forward, 360f, fov._radius);
+        Handles.DrawWireArc(fov.transform.position, Vector3.up, Vector3.forward, 360f, fov._touchDetectionRange);
         
         Vector3 viewAngle01 = DirectionFromAngle(fov.transform.eulerAngles.y, -fov._detectionAngle / 2);
         Vector3 viewAngle02 = DirectionFromAngle(fov.transform.eulerAngles.y, fov._detectionAngle / 2);

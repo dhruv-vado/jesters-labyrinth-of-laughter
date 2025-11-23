@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using TMPro;
 
 public enum GameState
 {
@@ -42,6 +43,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private AudioSource _bgSound;
     [SerializeField] private AudioClip _bgAmbience;
     [SerializeField] private AudioClip _bgChase;
+    [SerializeField] private TextMeshProUGUI _enemyCountText;
 
 
     [Header("Game Events")]
@@ -53,9 +55,10 @@ public class GameManager : MonoBehaviour
 
     private EnemyManager _enemyManager;
 
+    private int _currentEnemyCount;
+
     private List<Enemy> _spawnedEnemies = new List<Enemy>();
     private Transform _playerTransform;
-    private bool _playerFound = false;
 
     public bool IsPlayable = true;
     public bool IsPaused = false;
@@ -91,7 +94,10 @@ public class GameManager : MonoBehaviour
         PlayerManager.Instance.Spawn();
         Cursor.lockState = CursorLockMode.Locked;
         SpawnEnemies();
-        
+
+        _currentEnemyCount = _numberOfEnemies;
+        _enemyCountText.text = "Clowns Left: " + _currentEnemyCount.ToString(); 
+
         _currentState = GameState.Playing;
         OnGameStart?.Invoke();
 
@@ -165,7 +171,7 @@ public class GameManager : MonoBehaviour
 
     public void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Escape))
+        if(InputManager.Instance.PauseGame())
         {
             if(IsPaused)
             {
@@ -176,6 +182,12 @@ public class GameManager : MonoBehaviour
                 PauseGame();
             }
         }
+    }
+
+    public void UpdateEnemyCount()
+    {
+        _currentEnemyCount--;
+        _enemyCountText.text = "Clowns Left: " + _currentEnemyCount.ToString(); 
     }
 
     public void ChasingPlayer()
@@ -194,11 +206,11 @@ public class GameManager : MonoBehaviour
     {
         if(_currentState != GameState.Playing) return;
 
+        PlayerManager.Instance.PlayerCaught();
         IsPlayable = false;
         _currentState = GameState.GameOver;
         Cursor.lockState = CursorLockMode.None;
         OnPlayerCaught?.Invoke();
-        PlayerManager.Instance.PlayerCaught();
     }
 
     public void PlayerEscaped()

@@ -16,8 +16,14 @@ public class EnemyManager : MonoBehaviour
     #endregion
 
     [HideInInspector]public Transform[] WayPoints;
+    public bool _playerDetected = false;
     
     private List<Enemy> _enemies = new List<Enemy>();
+
+    public void PlayerDetected(bool detected)
+    {
+        _playerDetected = detected;
+    }
     
     public void RegisterEnemy(Enemy enemy)
     {
@@ -41,7 +47,11 @@ public class EnemyManager : MonoBehaviour
     {
         foreach(Enemy enemy in _enemies)
         {
-            Destroy(enemy.gameObject);
+            if(enemy != null)
+            {
+                Destroy(enemy.gameObject);
+            }
         }
+        _enemies.Clear();
     }
 }

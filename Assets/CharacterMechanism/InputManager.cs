@@ -84,4 +84,9 @@ public class InputManager : MonoBehaviour
     {
         return inputSystem_Actions.Player.Exit.triggered;
     }
+
+    public bool PauseGame()
+    {
+        return inputSystem_Actions.Player.Pause.triggered;
+    }
 }

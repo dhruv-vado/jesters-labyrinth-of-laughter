@@ -373,7 +373,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: cab3b7f7ef373334abafeb872e48713a, type: 3}
+  m_Resource: {fileID: 8300000, guid: 6c366bc335d14e64b80d88150d0ad9fb, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -652,7 +652,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 34.9}
+  m_AnchoredPosition: {x: 0, y: 59.2}
   m_SizeDelta: {x: 1704.8868, y: 494.6145}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &360818350
@@ -686,9 +686,10 @@ MonoBehaviour:
     Controls: WASD to
     Move, Hold Right Click for Flashlight, E for Sonar Wave, F on exit door for escaping.
 
+    Sond
+    Credits -  The fine art of poisoning by jill tracy
 
-    Made
-    by Vado <3
+    Made by Vado <3
 
 '
   m_isRightToLeft: 0
@@ -717,8 +718,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 54.6
-  m_fontSizeBase: 54.6
+  m_fontSize: 57.76
+  m_fontSizeBase: 57.76
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -727,7 +728,7 @@ MonoBehaviour:
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
-  m_characterSpacing: 7.68
+  m_characterSpacing: 15.1
   m_wordSpacing: 11.79
   m_lineSpacing: 26.2
   m_lineSpacingMax: 0
@@ -1673,7 +1674,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 7706402e8c4aafb4080dd2c69b0dbf2f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 00efd870f0199af499e8292aa74bec67, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

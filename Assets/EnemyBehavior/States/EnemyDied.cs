@@ -8,7 +8,6 @@ public class EnemyDied : EnemyStatesBase
 
     public override void EnterState()
     {
-        
         Object.Destroy(Enemy.gameObject);
     }
 

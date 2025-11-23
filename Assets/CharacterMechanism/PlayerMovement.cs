@@ -10,14 +10,15 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float _doorDetectionRange = 1f;
     [SerializeField] private LayerMask _doorDetectionMask;
     [SerializeField] public GameObject _footstepsAudioSource;
+    [SerializeField] public AudioSource _deathAudio;
 
-    public GameObject camera;
+    //public GameObject camera;
 
     private bool _isPlayable = true;
     private CharacterController controller;
     private Vector3 playerVelocity;
     private bool groundedPlayer;
-    private bool crouch = false;
+    //private bool crouch = false;
     private InputManager inputManager;
     private GameManager gameManager;
 
@@ -50,7 +51,7 @@ public class PlayerMovement : MonoBehaviour
         playerVelocity.y += gravityValue * Time.deltaTime;
 
         //Crouch Mechanism
-        if(inputManager.IsCrouching())
+        /*if(inputManager.IsCrouching())
         {
             if (!crouch)
 			{
@@ -63,11 +64,11 @@ public class PlayerMovement : MonoBehaviour
         {
             if (crouch)
 			{
-            camera.transform.Translate ( 0f, 0.3f, 0f);
-            controller.height = 2f;
-			crouch = false;
+                camera.transform.Translate ( 0f, 0.3f, 0f);
+                controller.height = 2f;
+                crouch = false;
 			}
-        }
+        }*/
 
         Vector3 finalMove = (move * currentSpeed * Time.deltaTime) + (playerVelocity.y * Vector3.up * Time.deltaTime);
         controller.Move(finalMove);
@@ -108,5 +109,6 @@ public class PlayerMovement : MonoBehaviour
     {
         _isPlayable = false;
         _footstepsAudioSource.SetActive(false);
+        _deathAudio.Play();
     }
 }
