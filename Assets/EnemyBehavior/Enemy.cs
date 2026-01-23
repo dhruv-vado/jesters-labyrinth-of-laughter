@@ -30,11 +30,50 @@ public class Enemy : MonoBehaviour
 
     public EnemyStatesBase currentState{get{return _enemyStatesBase;} set {_enemyStatesBase = value;}}
 
+    private DifficultyManager difficultyManager;
+
     public Transform Player {get; set;}  //basically get set hides this in inspector
 
     private void Awake()
     {
+        difficultyManager = DifficultyManager.Instance;
         Agent = GetComponent<NavMeshAgent>();
+        switch(difficultyManager.currentDifficulty)
+        {
+            case Difficulty.Amateur:
+                PatrolSpeed = 4f;
+                ChaseSpeed = 6f;
+                ChaseAcceleration = 0.5f;
+                break;
+
+            case Difficulty.Intermediate:
+                PatrolSpeed = 5f;
+                ChaseSpeed = 8f;
+                ChaseAcceleration = 1f;
+                break;
+
+            case Difficulty.Professional:
+                PatrolSpeed = 6f;
+                ChaseSpeed = 10f;
+                ChaseAcceleration = 1.5f;
+                break;
+
+            case Difficulty.Nightmare:
+                PatrolSpeed = 7f;
+                ChaseSpeed = 12f;
+                ChaseAcceleration = 2f;
+                break;
+
+            case Difficulty.Insanity:
+                PatrolSpeed = 8f;
+                ChaseSpeed = 14f;
+                ChaseAcceleration = 2.5f;
+                break;
+
+            default:
+                Debug.LogWarning("Unknown difficulty");
+                break;
+        }
     }
 
     public void InitializeStates()

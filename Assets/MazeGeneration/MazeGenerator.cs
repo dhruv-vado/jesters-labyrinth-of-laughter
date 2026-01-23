@@ -11,15 +11,23 @@ public class MazeGenerator : MonoBehaviour
     [SerializeField] private MazeCell _mazeExitPrefab;
     [SerializeField] private int _mazeScale;
 
-    [SerializeField] private int _mazeWidth;
-    [SerializeField] private int _mazeDepth;
+    public int _mazeWidth;
+    public int _mazeDepth;
 
-    
     private int[] _centreIndex;
     private MazeCell[,] _mazeGrid;
 
+    private DifficultyManager difficultyManager;
+
     private void Start()
     {
+        difficultyManager = DifficultyManager.Instance;
+        if(difficultyManager.mazeSize != null)
+        {
+            _mazeWidth = difficultyManager.mazeSize;
+            _mazeDepth = difficultyManager.mazeSize;
+            Debug.Log(_mazeWidth);
+        }
         GenerateNewMaze();
     }
 

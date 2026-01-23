@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Game Settings")]
     [SerializeField] private GameState _currentState = GameState.Initializing;
-    [SerializeField] private int _numberOfEnemies = 3;
+    public int _numberOfEnemies = 3;
     [SerializeField] private float _minSpawnDistanceFromPlayer = 5f;
 
     [Header("References")]
@@ -65,10 +65,16 @@ public class GameManager : MonoBehaviour
 
     public GameState CurrentState => _currentState;
     public int ActiveEnemies => _spawnedEnemies.Count;
+    
+    private DifficultyManager difficultyManager;
 
     private void Start()
     {
         StartCoroutine(InitializeGame());
+        difficultyManager = DifficultyManager.Instance;
+        if(difficultyManager.noOfClowns != null)
+            _numberOfEnemies = difficultyManager.noOfClowns;
+        Debug.Log(_numberOfEnemies);
         _enemyManager = EnemyManager.Instance;
     }
 
@@ -255,6 +261,17 @@ public class GameManager : MonoBehaviour
     public void RestartGame()
     {
         SceneLoader.LoadScene(SceneLoader.Scene.Level);
+    }
+    
+    public void LoadMainMenu()
+    {
+        SceneLoader.LoadScene(SceneLoader.Scene.MainMenu);
+        difficultyManager.GetPlayerPrefs();
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 
     private void OnDestroy()

@@ -15,9 +15,47 @@ public class Flashlight : MonoBehaviour
     private float _lifeLeft;
     private float _batteryPercentage;
     private InputManager inputManager;
+    private DifficultyManager difficultyManager;
     
     void Start()
     {
+        difficultyManager = DifficultyManager.Instance;
+        switch(difficultyManager.currentDifficulty)
+        {
+            case Difficulty.Amateur:
+                _decayFactor = 2f;
+                _enemyDetectionRange = 8f;
+                _enemyKillTime = 0.6f;
+                break;
+
+            case Difficulty.Intermediate:
+                _decayFactor = 2.5f;
+                _enemyDetectionRange = 7f;
+                _enemyKillTime = 0.7f;
+                break;
+
+            case Difficulty.Professional:
+                _decayFactor = 3f;
+                _enemyDetectionRange = 6f;
+                _enemyKillTime = 0.8f;
+                break;
+
+            case Difficulty.Nightmare:
+                _decayFactor = 3.5f;
+                _enemyDetectionRange = 5f;
+                _enemyKillTime = 1f;
+                break;
+
+            case Difficulty.Insanity:
+                _decayFactor = 4f;
+                _enemyDetectionRange = 5f;
+                _enemyKillTime = 1.2f;
+                break;
+
+            default:
+                Debug.LogWarning("Unknown difficulty");
+                break;
+        }
         _flashlight.enabled = false;
         inputManager = InputManager.Instance;
         _lifeLeft = _totalLife;
