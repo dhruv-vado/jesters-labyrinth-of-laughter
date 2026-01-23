@@ -10,7 +10,7 @@ This is a horror maze game built using Unity 6. Your goal is to escape it while 
 - ### Sonar Wave
   - A wave of light (not sound) which the player can emit every 3 seconds.
   - Makes a clown glow when hit.
-- Fully functional UI
+- Fully functional UI with Difficulty and cutomiasation options.
 - Sound Effects to make the game more immersive.
 - Post processing effects for the same.
 
