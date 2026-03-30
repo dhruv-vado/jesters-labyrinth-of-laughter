@@ -4,10 +4,10 @@ This is a horror maze game built using Unity 6. Your goal is to escape it while 
 - Randomly generates a 11 x 11 maze with an exit door at the centre of the maze.
 - Spawns 7 clowns at random spots in the maze.
 - Clown chases player at increasing speed whenever detected in clown's FOV (Field of View).
-- ### Flashlight
+- ### Flashlight (Hold Right Click)
   - Has a battery which drains while using.
   - Can be used to kill the clowns.
-- ### Sonar Wave
+- ### Sonar Wave (press E)
   - A wave of light (not sound) which the player can emit every 3 seconds.
   - Makes a clown glow when hit.
 - Fully functional UI with Difficulty and cutomiasation options.
